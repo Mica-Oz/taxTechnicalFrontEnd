@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 const axios = require("axios");
 const cheerio = require("cheerio");
 
@@ -67,6 +69,22 @@ const sortedPrep = [];
 //write a function that takes in state name and zip code and returns HTML
 
 function Form() {
+  const [details, setDetails] = useState({
+    state: "",
+    zip: "",
+    sortType: "",
+  });
+
+  function handleChange(e) {
+    const name = e.target.name;
+    const value = e.target.value;
+    setDetails((prev) => {
+      return { ...prev, [name]: value };
+    });
+  }
+
+  console.log(details);
+
   async function getHTML(state, zip) {
     let stateNum = states.indexOf(state);
 
@@ -129,7 +147,7 @@ function Form() {
     <div className="Form">
       <form>
         <label htmlFor="stateDropdown">Select a state:</label>
-        <select id="stateDropdown" name="stateDropdown">
+        <select id="stateDropdown" name="state" onChange={handleChange}>
           <option value="">-- Select a state --</option>
           <option value="Alabama">Alabama</option>
           <option value="Alaska">Alaska</option>
@@ -187,12 +205,13 @@ function Form() {
         <input
           type="text"
           id="zipInput"
-          name="zipInput"
+          name="zip"
           placeholder="Enter a zip..."
+          onChange={handleChange}
         />
 
         <label htmlFor="sortDropDown">Sort By:</label>
-        <select id="sortDropDown" name="sortDropDown">
+        <select id="sortDropDown" name="sortBy" onChange={handleChange}>
           <option value="">-- Select a way to sort --</option>
           <option value="name">By Name</option>
           <option value="phone">By Number</option>
