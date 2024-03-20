@@ -1,3 +1,5 @@
+import "./Form.css";
+
 import { useState } from "react";
 
 import axios from "axios";
@@ -73,8 +75,8 @@ function Form() {
     state: "",
     zip: "",
     sortType: "",
-    preparers,
   });
+  const [prep, setPrep] = useState([]);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -101,17 +103,14 @@ function Form() {
 
   function sortByEither(wayToSort) {
     if (wayToSort === "phone") {
-      //   console.log("line 103 hit");
-
       preparers.sort();
     }
 
-    // console.log("line108", preparers);
     for (let i = 0; i < preparers.length; i++) {
       sortedPrep.push(preparers[i][1]);
     }
-    //   console.log("line98", sortedPrep);
-    return sortedPrep;
+    setPrep([...prep, ...sortedPrep]);
+    // console.log("line98", sortedPrep, prep);
   }
 
   function handleSubmit(e) {
@@ -140,17 +139,13 @@ function Form() {
       })
       .then((res) => {
         sortByEither(details.sortType);
-        console.log("line 140", sortedPrep, details);
-        console.log("okokokoko");
-        setDetails(() => {
-          return { [preparers]: sortedPrep };
-        });
-        console.log("ok", details);
+        // console.log("line 143, sorted prep correct", sortedPrep, details, prep);
       });
   }
 
+  console.log(prep);
   return (
-    <div className="Form">
+    <div className="container">
       <form onSubmit={handleSubmit}>
         <label htmlFor="stateDropdown">Select a state:</label>
         <select id="stateDropdown" name="state" onChange={handleChange}>
@@ -225,6 +220,13 @@ function Form() {
 
         <button type="submit">Submit</button>
       </form>
+      <ul>
+        {prep.map((preparer) => (
+          <li class="prep" key={prep.indexOf(preparer)}>
+            {preparer}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }

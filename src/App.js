@@ -6,8 +6,8 @@ function App() {
     <div className="App">
       <header className="App-header">
         <h1>Find Tax Preparers In Your Area</h1>
-        <Form />
       </header>
+      <Form />
     </div>
   );
 }

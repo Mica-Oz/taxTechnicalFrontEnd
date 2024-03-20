@@ -1,0 +1,30 @@
+.container {
+  background-color: #4c5f83;
+  width: 100vw;
+  height: 100%;
+  padding-top: 5vh;
+  display: flex;
+  flex-direction: column;
+
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+form > * {
+  padding: 0px 10px 0px 20px;
+}
+ul {
+  display: flex;
+  flex: column;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  list-style-type: none;
+}
+li {
+  width: 50vw;
+  padding: 15px;
+  font-size: 15px;
+  background-color: #889cc1;
+  color: #1d222a;
+  border-bottom: 3px solid black;
+}
