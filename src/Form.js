@@ -73,6 +73,7 @@ function Form() {
     state: "",
     zip: "",
     sortType: "",
+    preparers,
   });
 
   function handleChange(e) {
@@ -139,7 +140,12 @@ function Form() {
       })
       .then((res) => {
         sortByEither(details.sortType);
-        console.log("line 140", sortedPrep);
+        console.log("line 140", sortedPrep, details);
+        console.log("okokokoko");
+        setDetails(() => {
+          return { [preparers]: sortedPrep };
+        });
+        console.log("ok", details);
       });
   }
 
