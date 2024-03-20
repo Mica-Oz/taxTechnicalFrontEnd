@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-const axios = require("axios");
-const cheerio = require("cheerio");
+import axios from "axios";
+import cheerio from "cheerio";
 
 //scrape response data from
 //https://www.irs.gov/efile-index-taxpayer-search?zip=90021&state=6
@@ -76,21 +76,19 @@ function Form() {
   });
 
   function handleChange(e) {
-    const name = e.target.name;
-    const value = e.target.value;
+    const { name, value } = e.target;
+
     setDetails((prev) => {
       return { ...prev, [name]: value };
     });
   }
-
-  console.log(details);
 
   async function getHTML(state, zip) {
     let stateNum = states.indexOf(state);
 
     try {
       const response = await axios.get(
-        `https://www.irs.gov/efile-index-taxpayer-search?zip=${zip}&state=${stateNum}`
+        `https://cors-anywhere.herokuapp.com/https://www.irs.gov/efile-index-taxpayer-search?zip=${zip}&state=${stateNum}`
       );
 
       return response.data;
@@ -102,12 +100,12 @@ function Form() {
 
   function sortByEither(wayToSort) {
     if (wayToSort === "phone") {
-      //   console.log("hit");
+      //   console.log("line 103 hit");
 
       preparers.sort();
     }
 
-    // console.log("line94", preparers);
+    // console.log("line108", preparers);
     for (let i = 0; i < preparers.length; i++) {
       sortedPrep.push(preparers[i][1]);
     }
@@ -115,8 +113,10 @@ function Form() {
     return sortedPrep;
   }
 
-  function handleSubmit(state, zip, sortType) {
-    getHTML(state, zip)
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(details);
+    getHTML(details.state, details.zip)
       .then((res) => {
         const $ = cheerio.load(res);
         $("tbody>tr").each((i, preparer) => {
@@ -134,18 +134,18 @@ function Form() {
             .replace("-", "");
 
           preparers.push([phone, item]);
-          // console.log(item, phone);
+          // console.log('line 135', item, phone);
         });
       })
       .then((res) => {
-        sortByEither(sortType);
-        // console.log("line 126", sortedPrep);
+        sortByEither(details.sortType);
+        console.log("line 140", sortedPrep);
       });
   }
 
   return (
     <div className="Form">
-      <form>
+      <form onSubmit={handleSubmit}>
         <label htmlFor="stateDropdown">Select a state:</label>
         <select id="stateDropdown" name="state" onChange={handleChange}>
           <option value="">-- Select a state --</option>
@@ -211,15 +211,13 @@ function Form() {
         />
 
         <label htmlFor="sortDropDown">Sort By:</label>
-        <select id="sortDropDown" name="sortBy" onChange={handleChange}>
+        <select id="sortDropDown" name="sortType" onChange={handleChange}>
           <option value="">-- Select a way to sort --</option>
           <option value="name">By Name</option>
           <option value="phone">By Number</option>
         </select>
 
-        <button type="submit" onSubmit={handleSubmit}>
-          Submit
-        </button>
+        <button type="submit">Submit</button>
       </form>
     </div>
   );
